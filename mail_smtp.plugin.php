@@ -65,7 +65,7 @@ class MailSMTP extends Plugin
 		// Start SMTP object
 		$smtp = new Mail_SMTP( array (
 			'host' => ( Options::get('mailsmtp__ssl') ? 'ssl://' : '' ) . Options::get('mailsmtp__hostname'),
-			'port' => Options::get( 'mailsmtp__port' ),
+			'port' => (int) Options::get( 'mailsmtp__port' ),
 			'auth' => (bool) Options::get( 'mailsmtp__auth' ),
 			'username' => Options::get( 'mailsmtp__username' ),
 			'password' => Options::get( 'mailsmtp__password' )
@@ -74,14 +74,9 @@ class MailSMTP extends Plugin
 		// Make header array
 		$headers = array_merge( $mail['headers'], array(
 			'To' => $mail['to'],
-			'Subject' => $mail['subject']
+			'Subject' => $mail['subject'],
+			'From' => Options::get( 'mailsmtp__from' )
 		) );
-
-		// Do we have a from?
-		$from = Options::get( 'mailsmtp__from' );
-		if ( !empty( $from ) ) {
-			$headers['From'] = $from;
-		}
 
 		// Send!
 		if ( $smtp->send( $mail['to'], $headers, $mail['message'] ) ) {
@@ -115,6 +110,12 @@ class MailSMTP extends Plugin
 					$ui->append( 'text', 'username', 'option:mailsmtp__username', _t( 'Auth Username:' ) );
 					$ui->append( 'text', 'password', 'option:mailsmtp__password', _t( 'Auth Password:' ) );
 					$ui->append( 'text', 'from', 'option:mailsmtp__from', _t( 'From Address (optional, can be \'Hello &lt;hello@example.com&gt;\')') );
+
+					$ui->hostname->raw = true;
+					$ui->username->raw = true;
+					$ui->password->raw = true;
+					$ui->from->raw = true;
+
 					$ui->append( 'submit', 'save', 'Save' );
 					$ui->on_success( array( $this, 'updated_config' ) );
 					$ui->out();
