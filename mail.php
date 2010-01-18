@@ -161,11 +161,6 @@ class Mail_RFC822 {
      */
     function parseAddressList($address = null, $default_domain = null, $nest_groups = null, $validate = null, $limit = null)
     {
-        if (!isset($this) || !isset($this->mailRFC822)) {
-            $obj = new Mail_RFC822($address, $default_domain, $nest_groups, $validate, $limit);
-            return $obj->parseAddressList();
-        }
-
         if (isset($address))        $this->address        = $address;
         if (isset($default_domain)) $this->default_domain = $default_domain;
         if (isset($nest_groups))    $this->nestGroups     = $nest_groups;
@@ -2600,7 +2595,7 @@ class Mail
 		}
 
 		$result = $this->_sanitizeHeaders($headers);
-		if (is_a($result, 'Error')) {
+		if ( $result instanceOf Error ) {
 			return $result;
 		}
 
@@ -2666,7 +2661,7 @@ class Mail
 			if (strcasecmp($key, 'From') === 0) {
 				$parser = new Mail_RFC822();
 				$addresses = $parser->parseAddressList($value, 'localhost', false);
-				if (is_a($addresses, 'Error')) {
+				if ( $addresses instanceOf Error ) {
 					return $addresses;
 				}
 
@@ -2729,10 +2724,11 @@ class Mail
 		// Parse recipients, leaving out all personal info. This is
 		// for smtp recipients, etc. All relevant personal information
 		// should already be in the headers.
-		$addresses = Mail_RFC822::parseAddressList($recipients, 'localhost', false);
+		$parser = new Mail_RFC822();
+		$addresses = $parser->parseAddressList($recipients, 'localhost', false);
 
 		// If parseAddressList() returned a Error object, just return it.
-		if (is_a($addresses, 'Error')) {
+		if ( $addresses instanceOf Error ) {
 			return $addresses;
 		}
 
@@ -2988,14 +2984,14 @@ class Mail_SMTP extends Mail
 		}
 
 		$recipients = $this->parseRecipients($recipients);
-		if (is_a($recipients, 'Error')) {
+		if ( $recipients instanceOf Error ) {
 			$this->_smtp->rset();
 			return $recipients;
 		}
 
 		foreach ($recipients as $recipient) {
 			$res = $this->_smtp->rcptTo($recipient);
-			if (is_a($res, 'Error')) {
+			if ( $res instanceOf Error ) {
 				$error = $this->_error("Failed to add recipient: $recipient", $res);
 				$this->_smtp->rset();
 				throw Error::raise($error, self::ERROR_RECIPIENT);
@@ -3004,7 +3000,7 @@ class Mail_SMTP extends Mail
 
 		/* Send the message's headers and the body as SMTP data. */
 		$res = $this->_smtp->data($textHeaders . "\r\n\r\n" . $body);
-		if (is_a($res, 'Error')) {
+		if ( $res instanceOf Error ) {
 			$error = $this->_error('Failed to send data', $res);
 			$this->_smtp->rset();
 			throw Error::raise($error, self::ERROR_DATA);
