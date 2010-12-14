@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<plugin>
+<pluggable>
 	<name>Mail SMTP</name>
 	<url>http://www.benhutchins.com/</url>
 	<author>Benjamin Hutchins</author>
@@ -8,5 +8,5 @@
 	<description>Allows you to use an SMTP server to send mail through Habari.</description>
 	<license url="http://www.apache.org/licenses/LICENSE-2.0.html">Apache Software License 2.0</license>
 	<copyright>2010</copyright>
-</plugin>
+</pluggable>
  
