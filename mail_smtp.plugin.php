@@ -9,25 +9,8 @@
  * @todo Provide an undo popup link like in gmail.
  **/
 
-class MailSMTP extends Plugin
+class Mail_SMTP extends Plugin
 {
-	/**
-	 * function info
-	 * Returns information about this plugin
-	 * @return array Plugin info array
-	 **/
-	function info()
-	{
-		return array (
-			'name' => 'Mail SMTP',
-			'url' => 'http://www.benhutchins.com/',
-			'author' => 'Benjamin Hutchins',
-			'authorurl' => 'http://www.benhutchins.com/',
-			'version' => '1.0',
-			'description' => 'Allows you to use an SMTP server to send mail through Habari.',
-			'license' => 'Apache License 2.0',
-		);
-	}
 
 	/**
 	 * function action_plugin_activation
