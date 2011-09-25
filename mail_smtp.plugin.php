@@ -39,7 +39,7 @@ class Mail_SMTP extends Plugin
 	 * @param array The content of the message to send.
 	 * @return boolean Whether or not this plugin handled the message.
 	 **/
-	function filter_send_mail( &$handled, $mail )
+	function filter_send_mail( $handled, $mail )
 	{
 		require( dirname( __FILE__ ) . '/mail.php' );
 
