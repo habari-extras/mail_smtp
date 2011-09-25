@@ -33,13 +33,11 @@ class Mail_SMTP extends Plugin
 	}
 
 	/**
-	 * This function is executed when the filter "before_post_delete" is
-	 * called just before a post is to be deleted.
-	 * This filter should return a boolean value to indicate whether
-	 * the post should be deleted or not.
-	 * @param Boolean Whether to delete the post or not
-	 * @param Post The post object to potentially delete
-	 * @return Boolean Whether to delete the post or not
+	 * Filters any messages sent through the Utils::mail() function, attempting to send them via SMTP instead.
+	 * 
+	 * @param boolean Whether this message has already been handled by another plugin or not.
+	 * @param array The content of the message to send.
+	 * @return boolean Whether or not this plugin handled the message.
 	 **/
 	function filter_send_mail( &$handled, $mail )
 	{
@@ -62,11 +60,17 @@ class Mail_SMTP extends Plugin
 		) );
 
 		// Send!
-		if ( $smtp->send( $mail['to'], $headers, $mail['message'] ) ) {
+		$result = $smtp->send( $mail['to'], $headers, $mail['message'] );
+		
+		if ( $result === true ) {
 			$handled = true;
 			return true;
 		}
 		else {
+			
+			// log the reason why
+			EventLog::log( _t( 'Unable to send SMTP message: %s', array( $result->get() ) ) );
+			
 			$handled = false;
 			return false;
 		}
