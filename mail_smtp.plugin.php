@@ -9,7 +9,7 @@
  * @todo Provide an undo popup link like in gmail.
  **/
 
-class Mail_SMTP extends Plugin
+class Mail_SMTP_Plugin extends Plugin
 {
 
 	/**
